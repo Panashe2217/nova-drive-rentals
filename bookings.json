@@ -1,0 +1,11 @@
+[
+    {
+        "username": "patrick",
+        "car_id": 1,
+        "name": "pop",
+        "phone": "789",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-10",
+        "status": "Renting in Progress"
+    }
+]

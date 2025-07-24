@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Cars - NovaDrive Rentals</title>
+</head>
+<body>
+    <h1>Available Cars at {{ company_name }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p style="color: {% if category == 'error' %}red{% else %}green{% endif %};">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <ul>
+        {% for car in cars %}
+        <li>
+    <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}" width="200"><br>
+    {{ car.name }} - {{ car.model }} - {{ car.year }}<br>
+    <strong>Price:</strong> ${{ car.price }}<br>
+    <strong>Status:</strong> {{ car.status }}<br>
+    ...
+</li>
+
+            <li>
+                <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.name }}" width="300"><br>
+                <strong>{{ car.name }}</strong> - {{ car.model }} ({{ car.year }})<br>
+                <strong>Price per Day:</strong> ${{ car.price }}<br>
+                <strong>Status:</strong> {{ car.status }}<br>
+                {% if car.status == 'Available' %}
+                    <a href="{{ url_for('rent_car', car_id=car.id) }}">Rent</a>
+                {% else %}
+                    <em>Not Available</em>
+                {% endif %}
+            </li>
+            <hr>
+        {% else %}
+            <li>No cars available.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

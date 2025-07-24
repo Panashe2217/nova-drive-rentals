@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - NovaDrive Rentals</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #f4f4f4;
+            --button-bg: red;
+            --button-text: white;
+            --border-color: #000;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1f1f1f;
+            --button-bg: #c40000;
+            --button-text: white;
+            --border-color: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dashboard-buttons {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .dashboard-buttons a,
+        .dashboard-buttons button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .dashboard-buttons a:hover,
+        .dashboard-buttons button:hover {
+            background-color: #900000;
+        }
+
+        .car-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .car-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            width: 300px;
+            margin: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .car-card h3 {
+            margin-top: 10px;
+        }
+
+        .car-card p {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .rent-btn {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .rent-btn:hover {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to NovaDrive Rentals</h1>
+    <button id="theme-toggle" class="theme-toggle">Toggle Mode</button>
+</header>
+
+<div class="dashboard-buttons">
+    <a href="{{ url_for('booking_history') }}">View Booking History</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    
+</div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-message" style="color: green; text-align: center;">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="car-container">
+    {% for car in cars %}
+    <div class="car-card">
+        <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}">
+    <h3>{{ car.name }} - {{ car.model }}</h3>
+    <p>Year: {{ car.year }}</p>
+    <p>Price: ${{ car.price }} per day</p>
+    <p>Status: {{ car.status }}</p>
+        <form method="POST" action="{{ url_for('rent_car', car_id=car.id) }}">
+            <button type="submit" class="rent-btn">Rent</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
+
+</body>
+</html>

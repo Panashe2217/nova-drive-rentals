@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NovaDrive Rentals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), 
+                url("{{ url_for('static', filename='car-bg.jpg') }}") center/cover no-repeat;
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+</style>
+
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>NovaDrive Rentals</h1>
+            <button id="mode-toggle" class="mode-toggle">Toggle Dark/Light Mode</button>
+            <p>Your journey begins with us. Affordable. Reliable. NovaDrive.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('user_login') }}" class="btn">User Login</a>
+                <a href="{{ url_for('admin_login') }}" class="btn">Admin Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="about">
+        <h2>About NovaDrive Rentals 🚗</h2>
+        <p>Welcome to <strong>NovaDrive Rentals</strong> – your trusted partner for reliable and affordable car rentals. Our service guarantees smooth rides and stress-free rentals, whether you’re traveling for work or leisure.</p>
+    </section>
+
+    <section class="info-cards">
+  <div class="info-card">
+    <h2>🚘 How It Works</h2>
+    <p>Browse our available cars, click “Rent Car”, fill in your details, and we’ll reserve the car for you. Payment is made <strong>in cash at our office</strong> during pickup.</p>
+  </div>
+
+  <div class="info-card">
+    <h2>📋 Requirements</h2>
+    <ul>
+      <li>Minimum age: 21 years</li>
+      <li>Valid government-issued ID</li>
+      <li>Cash payment only – no online payments yet</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h2>🏢 Our Office</h2>
+    <p>123 Main Street, Gweru<br>Opening Hours: Mon–Sat, 9am–6pm</p>
+  </div>
+</section>
+
+
+    <section class="contact">
+        <h2>📞 Contact Us</h2>
+        <p><strong>Email:</strong> novadrive@info.com<br>
+        <strong>Phone:</strong> +918-798-797-467<br>
+        <strong>Instagram:</strong> @novadriverentals</p>
+    </section>
+
+ <footer class="footer">
+    <p>© 2025 NovaDrive Rentals. All rights reserved.</p>
+</footer>
+<script>
+  const toggle = document.getElementById('mode-toggle');
+  let darkMode = false;
+
+  toggle.addEventListener('click', () => {
+    darkMode = !darkMode;
+
+    if (darkMode) {
+      document.documentElement.style.setProperty('--bg-color', '#121212');
+      document.documentElement.style.setProperty('--text-color', '#ffffff');
+      document.documentElement.style.setProperty('--card-bg', '#1f1f1f');
+      document.documentElement.style.setProperty('--button-bg', '#ffffff');
+      document.documentElement.style.setProperty('--button-text', '#000000');
+    } else {
+      document.documentElement.style.setProperty('--bg-color', '#ffffff');
+      document.documentElement.style.setProperty('--text-color', '#000000');
+      document.documentElement.style.setProperty('--card-bg', '#f4f4f4');
+      document.documentElement.style.setProperty('--button-bg', '#000000');
+      document.documentElement.style.setProperty('--button-text', '#ffffff');
+    }
+  });
+</script>
+
+</body>
+</html>

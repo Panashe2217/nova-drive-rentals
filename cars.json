@@ -1,0 +1,146 @@
+[
+    {
+        "id": 1,
+        "name": "Toyota",
+        "model": "Corolla",
+        "year": 2020,
+        "price": 50,
+        "status": "Car Rented",
+        "image": "images/toyota_corolla.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Honda",
+        "model": "Civic",
+        "year": 2021,
+        "price": 45,
+        "status": "Available",
+        "image": "images/honda_civic.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Ford",
+        "model": "Focus",
+        "year": 2019,
+        "price": 70,
+        "status": "Renting in Progress",
+        "image": "images/ford_focus.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Chevrolet",
+        "model": "Cruze",
+        "year": 2018,
+        "price": 100,
+        "status": "Available",
+        "image": "images/chevy_cruze.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Hyundai",
+        "model": "Elantra",
+        "year": 2022,
+        "price": 90,
+        "status": "Available",
+        "image": "images/hyundai_elantra.jpg"
+    },
+    {
+        "id": 6,
+        "name": "Nissan",
+        "model": "Sentra",
+        "year": 2020,
+        "price": 50,
+        "status": "Available",
+        "image": "images/nissan_sentra.jpg"
+    },
+    {
+        "id": 7,
+        "name": "Kia",
+        "model": "Forte",
+        "year": 2021,
+        "price": 65,
+        "status": "Available",
+        "image": "images/kia_forte.jpg"
+    },
+    {
+        "id": 8,
+        "name": "Volkswagen",
+        "model": "Jetta",
+        "year": 2019,
+        "price": 110,
+        "status": "Available",
+        "image": "images/vw_jetta.jpg"
+    },
+    {
+        "id": 9,
+        "name": "Mazda",
+        "model": "Mazda3",
+        "year": 2022,
+        "price": 80,
+        "status": "Available",
+        "image": "images/mazda3.jpg"
+    },
+    {
+        "id": 10,
+        "name": "Subaru",
+        "model": "Impreza",
+        "year": 2018,
+        "price": 35,
+        "status": "Available",
+        "image": "images/subaru_impreza.jpg"
+    },
+    {
+        "id": 11,
+        "name": "BMW",
+        "model": "3 Series",
+        "year": 2021,
+        "price": 150,
+        "status": "Available",
+        "image": "images/bmw_3series.jpg"
+    },
+    {
+        "id": 12,
+        "name": "Mercedes-Benz",
+        "model": "C-Class",
+        "year": 2020,
+        "price": 170,
+        "status": "Available",
+        "image": "images/mercedes_cclass.jpg"
+    },
+    {
+        "id": 13,
+        "name": "Audi",
+        "model": "A4",
+        "year": 2022,
+        "price": 200,
+        "status": "Available",
+        "image": "images/audi_a4.jpg"
+    },
+    {
+        "id": 14,
+        "name": "Tesla",
+        "model": "Model 3",
+        "year": 2023,
+        "price": 300,
+        "status": "Renting in Progress",
+        "image": "images/tesla_model3.jpg"
+    },
+    {
+        "id": 15,
+        "name": "Lexus",
+        "model": "IS 300",
+        "year": 2021,
+        "price": 40,
+        "status": "Car Rented",
+        "image": "images/lexus_is300.jpg"
+    },
+    {
+        "id": 1753377833,
+        "name": "Toyota",
+        "model": "Camry",
+        "year": "2013",
+        "price": 65,
+        "status": "Available",
+        "image": "images/toyota_camry.jpg"
+    }
+]

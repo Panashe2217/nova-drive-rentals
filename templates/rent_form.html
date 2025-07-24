@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent {{ car.name }} {{ car.model }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='images/user_car.jpg') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .rent-form {
+            background-color: rgba(0, 0, 0, 0.8);
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .rent-form h2 {
+            color: red;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        .back-link {
+            color: white;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .flash-message {
+            color: yellow;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="rent-form">
+        <h2>Rent {{ car.name }} {{ car.model }}</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-message">
+              {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="name">Your Name</label>
+            <input type="text" name="name" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="text" name="phone" required>
+
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" required>
+
+            <label for="end_date">End Date</label>
+            <input type="date" name="end_date" required>
+
+            <button type="submit">Rent Now</button>
+        </form>
+
+        <a class="back-link" href="/dashboard">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

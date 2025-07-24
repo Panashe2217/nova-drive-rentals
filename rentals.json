@@ -1,0 +1,19 @@
+[
+    {
+        "car_id": 1,
+        "user": "patrick",
+        "name": "emma",
+        "email": "pana@gmail.com",
+        "phone": "1234567",
+        "rental_date": "2025-07-24"
+    },
+    {
+        "car_id": 15,
+        "username": "patrick",
+        "name": "pee",
+        "email": "kf@gmail.com",
+        "phone": "6789",
+        "pickup_date": "2025-07-11",
+        "return_date": "2025-08-07"
+    }
+]

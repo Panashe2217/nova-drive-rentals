@@ -1,0 +1,316 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_sqlalchemy import SQLAlchemy
+import json
+import os
+import time
+
+# App setup
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nova_drive.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize database
+db = SQLAlchemy(app)
+
+class User(db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+
+
+# User class (for login only)
+class LoginUser(UserMixin):
+    def __init__(self, id, username, password, role):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.role = role
+
+    def get_id(self):
+        return str(self.id)
+
+# Login manager setup
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'user_login'
+
+# Create tables if not already there
+with app.app_context():
+    db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    with open('data/users.json') as f:
+        users = json.load(f)
+    user = next((u for u in users if str(u['id']) == str(user_id)), None)
+    if user:
+        return User(user['id'], user['username'])
+    return None
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')  # Your homepage
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if users.txt exists
+        if not os.path.exists('users.txt'):
+            with open('users.txt', 'w') as f:
+                pass  # create empty file
+
+        with open('users.txt', 'r') as file:
+            users = file.readlines()
+            for user in users:
+                saved_username, _ = user.strip().split(',')
+                if username == saved_username:
+                    flash('Username already exists. Try another one.', 'error')
+                    return redirect(url_for('register'))
+
+        with open('users.txt', 'a') as file:
+            file.write(f'{username},{password}\n')
+
+        flash('Registration successful! Please login.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    error = None
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        admin = Admin.query.filter_by(email=email, password=password).first()
+        if admin:
+            session['admin_id'] = admin.id
+            return redirect(url_for('admin_dashboard'))
+        else:
+            error = 'Invalid email or password'
+    return render_template('admin_login.html', error=error, company_name='NovaDrive Rentals')
+
+# User Login
+@app.route('/user_login', methods=['GET', 'POST'])
+def user_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        user = User.query.filter_by(username=username, password=password).first()
+        
+        if user:
+            login_user(LoginUser(id=user.id, username=user.username, password=user.password, role='user'))
+            return redirect(url_for('dashboard')) # or wherever you want
+        else:
+            flash("Invalid username or password")
+
+    return render_template('user_login.html')
+
+@app.route('/cars')
+def view_cars():
+    with open('cars.json', 'r') as f:
+        cars = json.load(f)
+    return render_template('cars.html', cars=cars, company_name="NovaDrive Rentals")
+
+@app.route('/dashboard')
+def dashboard():
+    if 'username' not in session:
+        flash('Please login first.', 'error')
+        return redirect(url_for('user_login'))
+
+    with open('cars.json', 'r') as file:
+        cars = json.load(file)
+
+    return render_template(
+        'dashboard.html',
+        cars=cars,
+        company_name="NovaDrive Rentals",
+        role=session.get('role')  # pass the role to the template
+    )
+
+
+@app.route('/rent/<int:car_id>', methods=['GET', 'POST'])
+@login_required
+def rent_car(car_id):
+    with open('data/cars.json') as f:
+        cars = json.load(f)
+
+    car = next((c for c in cars if c['id'] == car_id), None)
+    if not car:
+        flash("Car not found", "error")
+        return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        pickup_date = request.form['pickup_date']
+        return_date = request.form['return_date']
+
+        # Update car status to Renting in Progress
+        car['status'] = 'Renting in Progress'
+
+        # Save updated car data
+        with open('data/cars.json', 'w') as f:
+            json.dump(cars, f, indent=4)
+
+        # Optional: Save booking to user's history (if you're tracking that)
+        flash("Car booking successful! Please pay at the office to finalize.", "success")
+        return redirect(url_for('dashboard'))
+
+    return render_template('rent.html', car=car)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))  # Change 'index' to 'login'
+
+@app.route('/info')
+def company_info():
+    return render_template('company_info.html')
+@app.route('/add_car', methods=['GET', 'POST'])
+def add_car():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        model = request.form.get('model')
+        year = request.form.get('year')
+        image = request.files.get('image')
+
+        if not all([name, model, year, image]):
+            flash("Please fill in all fields and upload an image.", "error")
+            return redirect(url_for('add_car'))
+
+        filename = image.filename
+        image.save(os.path.join('static', filename))  # Make sure you have 'static' folder
+
+        new_car = {
+            "id": int(time.time()),
+            "name": name,
+            "model": model,
+            "year": year,
+            "image": filename
+        }
+
+        # Load existing cars
+        cars = []
+        if os.path.exists("cars.json"):
+            with open("cars.json", "r") as f:
+                cars = json.load(f)
+
+        cars.append(new_car)
+
+        with open("cars.json", "w") as f:
+            json.dump(cars, f, indent=4)
+
+        flash("Car added successfully!", "success")
+        return redirect(url_for('admin_dashboard'))
+
+    return render_template("add_car.html", company_name="NovaDrive Rentals")
+
+@app.route('/delete_car/<int:car_id>', methods=['POST'])
+def delete_car(car_id):
+    if 'role' in session and session['role'] == 'admin':
+        with open('cars.json', 'r') as file:
+            cars = json.load(file)
+
+        updated_cars = [car for car in cars if car['id'] != car_id]
+
+        with open('cars.json', 'w') as file:
+            json.dump(updated_cars, file, indent=4)
+
+        flash('Car deleted successfully!', 'success')
+        return redirect(url_for('admin_dashboard'))
+    else:
+        flash('Access denied.', 'error')
+        return redirect(url_for('admin_login'))
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if 'role' in session and session['role'] == 'admin':
+        with open('cars.json', 'r') as file:
+            cars = json.load(file)
+        return render_template('admin_dashboard.html', cars=cars, company_name="NovaDrive Rentals")
+    else:
+        flash('Access denied.', 'error')
+        return redirect(url_for('admin_login'))
+@app.route('/my_bookings')
+def my_bookings():
+    if 'username' not in session or session.get('role') != 'user':
+        flash('Access denied.', 'error')
+        return redirect(url_for('login'))
+
+    with open('bookings.json', 'r') as file:
+        bookings = json.load(file)
+
+    user_bookings = [b for b in bookings if b['username'] == session['username']]
+
+    return render_template('my_bookings.html', bookings=user_bookings, company_name="NovaDrive Rentals")
+@app.route('/admin/bookings')
+def view_all_bookings():
+    if 'username' not in session or session.get('role') != 'admin':
+        flash('Access denied.', 'error')
+        return redirect(url_for('admin_login'))
+
+    with open('bookings.json', 'r') as file:
+        bookings = json.load(file)
+
+    return render_template('all_bookings.html', bookings=bookings, company_name="NovaDrive Rentals")
+
+@app.route('/mark_as_rented/<int:car_id>')
+@login_required
+def mark_as_rented(car_id):
+    if session.get('role') != 'admin':
+        flash("Access denied.", "error")
+        return redirect(url_for('dashboard'))
+
+    with open('data/cars.json') as f:
+        cars = json.load(f)
+
+    car = next((c for c in cars if c['id'] == car_id), None)
+    if not car:
+        flash("Car not found", "error")
+        return redirect(url_for('dashboard'))
+
+    car['status'] = 'Car Rented'
+
+    with open('data/cars.json', 'w') as f:
+        json.dump(cars, f, indent=4)
+
+    flash(f"Status for {car['name']} {car['model']} updated to Car Rented", "success")
+    return redirect(url_for('dashboard'))
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Create all tables
+
+        # ✅ Create default user
+        if not User.query.filter_by(username='patrick').first():
+            default_user = User(username='patrick', password='user123')
+            db.session.add(default_user)
+            db.session.commit()
+            print("✅ Default user 'patrick' created.")
+        else:
+            print("👤 Default user 'patrick' already exists.")
+
+        # ✅ Create default admin
+        if not Admin.query.filter_by(email='admin@novadrive.com').first():
+            default_admin = Admin(email='admin@novadrive.com', password='admin123')
+            db.session.add(default_admin)
+            db.session.commit()
+            print("✅ Default admin 'admin@novadrive.com' created.")
+        else:
+            print("👑 Default admin already exists.")
+
+    # ✅ Start Flask app
+    app.run(debug=True)
