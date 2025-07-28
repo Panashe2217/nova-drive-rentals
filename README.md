@@ -102,7 +102,7 @@ Panashe Emma Nkume
 🔗 LinkedIn
 https://www.linkedin.com/in/panashe-nkume-086215257/
 💻 GitHub
-Panashe2217
+https://github.com/Panashe2217/
 
 📄 License
 This project is licensed under the MIT License.
