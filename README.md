@@ -100,7 +100,9 @@ PDF invoice generation
 Panashe Emma Nkume
 💌 panashenkume@gmail.com
 🔗 LinkedIn
+https://www.linkedin.com/in/panashe-nkume-086215257/
 💻 GitHub
+Panashe2217
 
 📄 License
 This project is licensed under the MIT License.
