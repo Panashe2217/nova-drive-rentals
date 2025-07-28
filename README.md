@@ -22,7 +22,7 @@
 
 ## 🚀 Live Demo
 
-🌐 [Click here to open NovaDrive Rentals]([https://nova-drive-rentals.onrender.com])
+https://nova-drive-rentals.onrender.com
 
 ---
 
