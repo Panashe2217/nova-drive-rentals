@@ -27,15 +27,6 @@
         "image": "images/ford_focus.jpg"
     },
     {
-        "id": 4,
-        "name": "Chevrolet",
-        "model": "Cruze",
-        "year": 2018,
-        "price": 100,
-        "status": "Available",
-        "image": "images/chevy_cruze.jpg"
-    },
-    {
         "id": 5,
         "name": "Hyundai",
         "model": "Elantra",
