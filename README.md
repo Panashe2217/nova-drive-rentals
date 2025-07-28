@@ -22,9 +22,7 @@
 
 ## 🚀 Live Demo
 
-🌐 [Click here to open NovaDrive Rentals](https://your-deployment-url.com)
-
-> Coming soon on [Render](https://render.com) or other hosting platform.
+🌐 [Click here to open NovaDrive Rentals]([https://nova-drive-rentals.onrender.com])
 
 ---
 
