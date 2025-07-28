@@ -85,7 +85,7 @@ NovaDriveRentals/
 - Open your browser and go to: [http://localhost:5000](http://localhost:5000)
 🔐 Admin Test Credentials
 
-Email: admin@example.com
+Email: admin@novadrive.com
 Password: admin123
 Update or change this in your database as needed.
 
