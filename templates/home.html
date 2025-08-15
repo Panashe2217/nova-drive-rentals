@@ -2,93 +2,747 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NovaDrive Rentals</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-<style>
-.hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), 
-                url("{{ url_for('static', filename='car-bg.jpg') }}") center/cover no-repeat;
-    color: white;
-    padding: 100px 20px;
-    text-align: center;
-}
-</style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ee4349d4;
+            --secondary-color: #c9373ee7;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --button-bg: #212529;
+            --button-text: #ffffff;
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
+        [data-theme="dark"] {
+            --primary-color: #ef4848;
+            --secondary-color: #ee4354;
+            --bg-color: #121212;
+            --text-color: #f8f9fa;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --button-bg: #f8f9fa;
+            --button-text: #212529;
+            --glass-border: rgba(0, 0, 0, 0.3);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        /* Stylish Text Logo */
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ee4360, #a30c16, #7209b7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .logo::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #ee4349, #3a0ca3, #7209b7);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+
+        .logo-text {
+            display: inline-block;
+            position: relative;
+        }
+
+        .logo-text span {
+            display: inline-block;
+        }
+
+        .logo-text span:first-child {
+            font-weight: 800;
+            color: #ee4343;
+        }
+
+        .logo-text span:last-child {
+            font-weight: 500;
+            color: #a30c0c;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), 
+                        url("{{ url_for('static', filename='car-bg.jpg') }}") center/cover no-repeat;
+            color: rgba(255, 255, 255, 0.635);
+            padding: 120px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ff8a00, #e52e71, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: clamp(1rem, 1.2vw, 1.1rem);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            box-shadow: var(--shadow);
+        }
+
+        .mode-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 2px solid transparent;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about {
+            text-align: center;
+        }
+
+        /* Services Section */
+        .services {
+            text-align: center;
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px auto;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Why Choose Us Section */
+        .why-choose-us {
+            text-align: center;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px auto;
+        }
+
+        .feature {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Contact Section */
+        .contact {
+            text-align: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            margin: 40px auto;
+            max-width: 800px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .contact-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .contact-link {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .contact-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Cookie Consent */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .cookie-consent p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .cookie-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .cookie-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 15px;
+            }
+
+            .hero {
+                padding: 100px 20px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .service-cards, .features {
+                grid-template-columns: 1fr;
+            }
+
+            .cookie-consent {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header class="hero">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <i class="fas fa-car logo-icon"></i>
+            <span class="logo-text">
+                <span>Nova</span><span>Drive</span>
+            </span>
+            <span style="font-weight: 400; margin-left: 5px;">Rentals</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#services">Our Services</a>
+            <a href="#why-choose-us">Why Choose Us</a>
+            <a href="#contact">Contact Us</a>
+            <a href="tel:+918798797467" class="contact-link">
+                <i class="fas fa-phone"></i> +91 879 879 7467
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <button id="mode-toggle" class="mode-toggle">
+            <i class="fas fa-moon"></i> Dark Mode
+        </button>
         <div class="hero-content">
             <h1>NovaDrive Rentals</h1>
-            <button id="mode-toggle" class="mode-toggle">Toggle Dark/Light Mode</button>
             <p>Your journey begins with us. Affordable. Reliable. NovaDrive.</p>
             <div class="hero-buttons">
-                <a href="{{ url_for('user_login') }}" class="btn">User Login</a>
-                <a href="{{ url_for('admin_login') }}" class="btn">Admin Login</a>
+                <a href="{{ url_for('user_login') }}" class="btn btn-primary">User Login</a>
+                <a href="{{ url_for('admin_login') }}" class="btn btn-primary">Admin Login</a>
                 <a href="{{ url_for('register') }}" class="btn btn-outline">Register</a>
             </div>
         </div>
-    </header>
-
-    <section class="about">
-        <h2>About NovaDrive Rentals 🚗</h2>
-        <p>Welcome to <strong>NovaDrive Rentals</strong> – your trusted partner for reliable and affordable car rentals. Our service guarantees smooth rides and stress-free rentals, whether you’re traveling for work or leisure.</p>
     </section>
 
-    <section class="info-cards">
-  <div class="info-card">
-    <h2>🚘 How It Works</h2>
-    <p>Browse our available cars, click “Rent Car”, fill in your details, and we’ll reserve the car for you. Payment is made <strong>in cash at our office</strong> during pickup.</p>
-  </div>
-
-  <div class="info-card">
-    <h2>📋 Requirements</h2>
-    <ul>
-      <li>Minimum age: 21 years</li>
-      <li>Valid government-issued ID</li>
-      <li>Cash payment only – no online payments yet</li>
-    </ul>
-  </div>
-
-  <div class="info-card">
-    <h2>🏢 Our Office</h2>
-    <p>123 Main Street, Gweru<br>Opening Hours: Mon–Sat, 9am–6pm</p>
-  </div>
-</section>
-
-
-    <section class="contact">
-        <h2>📞 Contact Us</h2>
-        <p><strong>Email:</strong> novadrive@info.com<br>
-        <strong>Phone:</strong> +918-798-797-467<br>
-        <strong>Instagram:</strong> @novadriverentals</p>
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2>About NovaDrive Rentals</h2>
+        <p>Welcome to <strong>NovaDrive Rentals</strong> – your trusted partner for reliable and affordable car rentals in Zimbabwe. With years of experience in the industry, we pride ourselves on offering top-quality vehicles and exceptional customer service.</p>
+        <p>Our mission is to make your travel experience seamless and enjoyable, whether you're visiting for business or pleasure. We offer a wide range of vehicles to suit every need and budget.</p>
     </section>
 
- <footer class="footer">
-    <p>© 2025 NovaDrive Rentals. All rights reserved.</p>
-</footer>
-<script>
-  const toggle = document.getElementById('mode-toggle');
-  let darkMode = false;
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <h2>Our Services</h2>
+        <p>We offer a comprehensive range of car rental services to meet all your transportation needs</p>
+        
+        <div class="service-cards">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-car-alt"></i>
+                </div>
+                <h3>Daily Car Rentals</h3>
+                <p>Flexible daily rental options with unlimited mileage and 24/7 roadside assistance for your convenience.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <h3>Long-Term Rentals</h3>
+                <p>Special discounted rates for monthly rentals, perfect for business trips or extended vacations.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <h3>Airport Transfers</h3>
+                <p>Meet-and-greet services at all major airports with comfortable vehicles for your arrival and departure.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Corporate Rentals</h3>
+                <p>Tailored solutions for businesses with special rates, invoicing options, and priority service.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-suitcase-rolling"></i>
+                </div>
+                <h3>Tourist Packages</h3>
+                <p>Complete holiday packages including vehicle rental, accommodation, and activity bookings.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shuttle-van"></i>
+                </div>
+                <h3>Group Transfers</h3>
+                <p>Comfortable minivans and buses for group travel to weddings, events, or corporate functions.</p>
+            </div>
+        </div>
+    </section>
 
-  toggle.addEventListener('click', () => {
-    darkMode = !darkMode;
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-us" id="why-choose-us">
+        <h2>Why Choose NovaDrive?</h2>
+        <p>Here's what sets us apart from other car rental companies in Zimbabwe</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Well-Maintained Fleet</h3>
+                <p>Our vehicles undergo regular maintenance and inspections to ensure your safety and comfort.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3>Competitive Pricing</h3>
+                <p>We offer the most competitive rates in the market with no hidden charges or surprise fees.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our customer service team is available round the clock to assist you with any queries or issues.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>Multiple Locations</h3>
+                <p>Convenient pickup and drop-off points across major cities in Zimbabwe.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Flexible Hours</h3>
+                <p>We accommodate early morning and late night pickups to suit your travel schedule.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Comprehensive Insurance</h3>
+                <p>All rentals include comprehensive insurance coverage for your peace of mind.</p>
+            </div>
+        </div>
+    </section>
 
-    if (darkMode) {
-      document.documentElement.style.setProperty('--bg-color', '#121212');
-      document.documentElement.style.setProperty('--text-color', '#ffffff');
-      document.documentElement.style.setProperty('--card-bg', '#1f1f1f');
-      document.documentElement.style.setProperty('--button-bg', '#ffffff');
-      document.documentElement.style.setProperty('--button-text', '#000000');
-    } else {
-      document.documentElement.style.setProperty('--bg-color', '#ffffff');
-      document.documentElement.style.setProperty('--text-color', '#000000');
-      document.documentElement.style.setProperty('--card-bg', '#f4f4f4');
-      document.documentElement.style.setProperty('--button-bg', '#000000');
-      document.documentElement.style.setProperty('--button-text', '#ffffff');
-    }
-  });
-</script>
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2><i class="fas fa-phone-alt"></i> Contact Us</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <a href="mailto:info@novadrive.co.zw" class="contact-link">info@novadrive.co.zw</a>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <span>87 Frank Johnson, Eastlea, Harare</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone contact-icon"></i>
+                <a href="tel:+263712124060" class="contact-link">+91 879 879 7467</a>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-whatsapp contact-icon"></i>
+                <a href="https://wa.me/918798797467" class="contact-link">WhatsApp: +91 879 879 7467</a>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-instagram contact-icon"></i>
+                <a href="https://instagram.com/novadriverentals" class="contact-link">@novadriverentals</a>
+            </div>
+        </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 NovaDrive Rentals. All rights reserved.</p>
+    </footer>
+
+    <!-- Cookie Consent -->
+    <div class="cookie-consent" id="cookie-consent">
+        <p>Your experience on this site will be improved by allowing cookies.</p>
+        <button class="cookie-btn" id="accept-cookies">Accept</button>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const modeToggle = document.getElementById('mode-toggle');
+        const icon = modeToggle.querySelector('i');
+        const theme = localStorage.getItem('theme');
+        
+        // Check for saved theme preference
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+            modeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        }
+        
+        // Toggle theme
+        modeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                modeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                modeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Cookie consent
+        const cookieConsent = document.getElementById('cookie-consent');
+        const acceptCookies = document.getElementById('accept-cookies');
+
+        if (!localStorage.getItem('cookies-accepted')) {
+            cookieConsent.style.display = 'flex';
+        }
+
+        acceptCookies.addEventListener('click', () => {
+            localStorage.setItem('cookies-accepted', 'true');
+            cookieConsent.style.display = 'none';
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>

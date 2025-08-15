@@ -5,32 +5,248 @@
   <title>Admin Dashboard - NovaDrive Rentals</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  
+  <!-- FORCED ADMIN DASHBOARD STYLES -->
+  <style>
+    /* ADMIN DASHBOARD FORCED STYLES */
+    body.admin-dashboard {
+      background-color: #0a0a0a;
+      padding: 20px;
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+    
+    body.admin-dashboard.dark-mode {
+      background-color: #f5f5f5;
+      color: #333333;
+    }
+    
+    .admin-dashboard-title {
+      color: #ff2e2e;
+      text-align: center;
+      margin: 2rem 0;
+      font-size: 2.5rem;
+    }
+    
+    .dark-mode .admin-dashboard-title {
+      color: #c21818;
+    }
+    
+    .admin-actions-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    
+    .admin-action-btn {
+      background-color: #ff2e2e;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 46, 46, 0.3);
+    }
+    
+    .dark-mode .admin-action-btn {
+      background-color: #c21818;
+    }
+    
+    .admin-action-btn.logout {
+      background-color: #3a0a0a;
+    }
+    
+    .dark-mode .admin-action-btn.logout {
+      background-color: #5e0c03;
+    }
+    
+    .admin-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(255, 46, 46, 0.4);
+    }
+    
+    .admin-cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
+    }
+    
+    .admin-car-card {
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      border-top: 5px solid #ff2e2e;
+    }
+    
+    .dark-mode .admin-car-card {
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-car-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(255, 46, 46, 0.25);
+    }
+    
+    .admin-car-image {
+      height: 220px;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .admin-car-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .admin-car-card:hover .admin-car-image img {
+      transform: scale(1.05);
+    }
+    
+    .admin-car-details {
+      padding: 1.5rem;
+    }
+    
+    .admin-car-name {
+      color: #ff2e2e;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .dark-mode .admin-car-name {
+      color: #c21818;
+    }
+    
+    .admin-car-info {
+      color: #e0e0e0;
+      margin-bottom: 1.5rem;
+    }
+    
+    .dark-mode .admin-car-info {
+      color: #555555;
+    }
+    
+    .admin-car-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .admin-car-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .admin-car-btn.rented {
+      background-color: #2e7d32;
+      color: white;
+    }
+    
+    .dark-mode .admin-car-btn.rented {
+      background-color: #388e3c;
+    }
+    
+    .admin-car-btn.delete {
+      background-color: #c62828;
+      color: white;
+    }
+    
+    .dark-mode .admin-car-btn.delete {
+      background-color: #d32f2f;
+    }
+    
+    .admin-car-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: #ff2e2e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    .dark-mode .theme-toggle {
+      background-color: #c21818;
+    }
+    
+    @media (max-width: 768px) {
+      .admin-actions-container {
+        flex-direction: column;
+      }
+      
+      .admin-action-btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .admin-cars-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .admin-car-actions {
+        flex-direction: column;
+      }
+      
+      .admin-car-btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
-<body>
-  <button id="theme-toggle" class="theme-toggle">Toggle Mode</button>
+<body class="admin-dashboard">
+  <button id="theme-toggle" class="theme-toggle">Toggle Light Mode</button>
 
-  <h1 class="dashboard-title"> Admin Dashboard – Cars</h1>
-  <div class="admin-actions">
-  <a href="{{ url_for('add_car') }}" class="action-btn"> Add Car</a>
-  <a href="{{ url_for('view_requests') }}" class="action-btn"> View Car Requests</a>
-  <a href="{{ url_for('logout') }}" class="action-btn logout"> Logout</a>
-</div>
+  <h1 class="admin-dashboard-title">Admin Dashboard – Cars</h1>
+  
+  <div class="admin-actions-container">
+    <a href="{{ url_for('add_car') }}" class="admin-action-btn">Add Car</a>
+    <a href="{{ url_for('view_requests') }}" class="admin-action-btn">View Car Requests</a>
+    <a href="{{ url_for('logout') }}" class="admin-action-btn logout">Logout</a>
+  </div>
 
-
-  <div class="car-row">
+  <div class="admin-cars-grid">
     {% for car in cars %}
-      <div class="car-item">
-        <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}">
-        <div class="car-info">
-          <h3>{{ car.name }} {{ car.model }} ({{ car.year }})</h3>
-          <p>Price: ${{ car.price }} / day</p>
-          <p>Status: {{ car.status }}</p>
-          <form action="{{ url_for('mark_as_rented', car_id=car.id) }}" method="POST" style="display:inline;">
-  <button type="submit" class="mini-btn"> Mark as Rented</button>
-</form>
-<form action="{{ url_for('delete_car', car_id=car.id) }}" method="POST" style="display:inline;">
-  <button type="submit" class="mini-btn delete"> Delete Car</button>
-</form>
+      <div class="admin-car-card">
+        <div class="admin-car-image">
+          <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.name }}">
+        </div>
+        <div class="admin-car-details">
+          <h3 class="admin-car-name">{{ car.name }} {{ car.model }} ({{ car.year }})</h3>
+          <div class="admin-car-info">
+            <p>Price: ${{ car.price }} / day</p>
+            <p>Status: {{ car.status }}</p>
+          </div>
+          <div class="admin-car-actions">
+            <form action="{{ url_for('mark_as_rented', car_id=car.id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="admin-car-btn rented">Mark as Rented</button>
+            </form>
+            <form action="{{ url_for('delete_car', car_id=car.id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="admin-car-btn delete">Delete Car</button>
+            </form>
+          </div>
         </div>
       </div>
     {% endfor %}
@@ -38,8 +254,26 @@
 
   <script>
     const toggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    // Check for saved theme preference or use dark as default
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      body.classList.add('dark-mode');
+      toggleBtn.textContent = 'Toggle Dark Mode';
+    }
+    
     toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
+      body.classList.toggle('dark-mode');
+      
+      // Update button text and save preference
+      if (body.classList.contains('dark-mode')) {
+        toggleBtn.textContent = 'Toggle Dark Mode';
+        localStorage.setItem('theme', 'light');
+      } else {
+        toggleBtn.textContent = 'Toggle Light Mode';
+        localStorage.setItem('theme', 'dark');
+      }
     });
   </script>
 </body>
